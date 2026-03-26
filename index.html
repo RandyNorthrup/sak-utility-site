@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.A.K. Utility — Swiss Army Knife for PC Technicians</title>
+    <meta name="description" content="S.A.K. Utility is a portable Windows toolkit for PC technicians, IT pros, and sysadmins. Single-EXE deployment — no installer, no runtime dependencies.">
+    <meta name="theme-color" content="#3b82f6">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="S.A.K. Utility — Swiss Army Knife for PC Technicians">
+    <meta property="og:description" content="Migration · Maintenance · Recovery · Imaging · Deployment — one portable EXE.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://randynorthrup.github.io/sak-utility-site/">
+    <meta property="og:image" content="https://raw.githubusercontent.com/RandyNorthrup/S.A.K.-Utility/main/resources/sak_splash.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔧</text></svg>">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ================================================================
+           CSS Custom Properties — matches the app's Windows 11 theme
+           ================================================================ */
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --primary-hover: #4f8efc;
+            --primary-pressed: #1d4ed8;
+            --accent-purple: #7c3aed;
+            --accent-emerald: #059669;
+
+            --text-primary: #0f172a;
+            --text-heading: #1e293b;
+            --text-body: #334155;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+
+            --bg-page: #f3f5f9;
+            --bg-surface: #f8fafc;
+            --bg-white: #ffffff;
+            --bg-info: #e0f2fe;
+
+            --border-default: #cbd5e1;
+            --border-muted: #94a3b8;
+
+            --success: #16a34a;
+            --warning: #d97706;
+            --error: #dc2626;
+
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.08), 0 8px 10px -6px rgba(0,0,0,0.04);
+        }
+
+        /* ================================================================
+           Reset & Base
+           ================================================================ */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: var(--text-body);
+            background: var(--bg-page);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: var(--primary); text-decoration: none; transition: color 0.2s; }
+        a:hover { color: var(--primary-dark); }
+
+        img { max-width: 100%; height: auto; }
+
+        /* ================================================================
+           Layout
+           ================================================================ */
+        .container {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        section {
+            padding: 80px 0;
+        }
+
+        /* ================================================================
+           Navigation
+           ================================================================ */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-default);
+            transition: box-shadow 0.3s;
+        }
+
+        .nav.scrolled { box-shadow: var(--shadow-md); }
+
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--text-primary);
+        }
+
+        .nav-brand svg { width: 28px; height: 28px; }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+
+        .nav-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: var(--primary);
+            color: #fff !important;
+            font-weight: 600;
+            font-size: 0.875rem;
+            border-radius: var(--radius-sm);
+            transition: background 0.2s, transform 0.15s;
+        }
+        .nav-cta:hover { background: var(--primary-dark); color: #fff !important; transform: translateY(-1px); }
+
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        /* ================================================================
+           Hero
+           ================================================================ */
+        .hero {
+            padding: 140px 0 100px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #1a2744 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(124,58,237,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: rgba(59,130,246,0.15);
+            border: 1px solid rgba(59,130,246,0.3);
+            border-radius: 999px;
+            color: #93c5fd;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            margin-bottom: 24px;
+        }
+
+        .hero-badge .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .hero h1 {
+            font-size: 3.25rem;
+            font-weight: 800;
+            line-height: 1.1;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 .gradient {
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            font-size: 1.15rem;
+            color: #94a3b8;
+            line-height: 1.7;
+            margin-bottom: 36px;
+            max-width: 520px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border-radius: var(--radius-md);
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(59,130,246,0.35);
+        }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59,130,246,0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #cbd5e1;
+            border: 1.5px solid rgba(203,213,225,0.3);
+        }
+        .btn-outline:hover {
+            color: #fff;
+            border-color: rgba(203,213,225,0.6);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .hero-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-image img {
+            width: 100%;
+            max-width: 480px;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 48px;
+            margin-top: 48px;
+            padding-top: 32px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .hero-stat h3 { font-size: 1.75rem; color: #fff; font-weight: 700; }
+        .hero-stat p { font-size: 0.8rem; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+
+        /* ================================================================
+           Feature Highlights (pill bar)
+           ================================================================ */
+        .highlights {
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border-default);
+        }
+
+        .highlights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            text-align: center;
+        }
+
+        .highlight-pill {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 24px 16px;
+            border-radius: var(--radius-md);
+            transition: background 0.2s, transform 0.2s;
+        }
+        .highlight-pill:hover {
+            background: var(--bg-surface);
+            transform: translateY(-2px);
+        }
+
+        .highlight-pill .icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+
+        .highlight-pill h4 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-heading);
+        }
+
+        /* ================================================================
+           Section Headers
+           ================================================================ */
+        .section-header {
+            text-align: center;
+            margin-bottom: 56px;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .section-header h2 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .section-header p {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        /* ================================================================
+           Feature Cards
+           ================================================================ */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.925rem;
+            line-height: 1.65;
+        }
+
+        .feature-card .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 16px;
+        }
+
+        .tag {
+            padding: 3px 10px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-default);
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        /* ================================================================
+           Detailed Feature Sections
+           ================================================================ */
+        .detail-section {
+            padding: 80px 0;
+        }
+
+        .detail-section:nth-child(even) { background: var(--bg-white); }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+        }
+
+        .detail-grid.reverse { direction: rtl; }
+        .detail-grid.reverse > * { direction: ltr; }
+
+        .detail-content h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .detail-content p {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+
+        .check-list {
+            list-style: none;
+            display: grid;
+            gap: 12px;
+        }
+
+        .check-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 0.925rem;
+            color: var(--text-body);
+        }
+
+        .check-list li::before {
+            content: '\2713';
+            flex-shrink: 0;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: rgba(22,163,74,0.1);
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        /* Feature visual placeholder */
+        .detail-visual {
+            background: linear-gradient(135deg, var(--bg-surface), var(--bg-page));
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            display: grid;
+            gap: 12px;
+        }
+
+        .visual-bar {
+            height: 12px;
+            border-radius: 999px;
+            background: var(--border-default);
+        }
+
+        .visual-bar.accent { background: linear-gradient(90deg, var(--primary), var(--accent-purple)); }
+        .visual-bar.short { width: 60%; }
+        .visual-bar.medium { width: 80%; }
+
+        /* ================================================================
+           Requirements
+           ================================================================ */
+        .requirements {
+            background: var(--bg-white);
+        }
+
+        .req-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .req-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            text-align: center;
+        }
+
+        .req-card .req-icon {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+        }
+
+        .req-card h4 {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            margin-bottom: 4px;
+        }
+
+        .req-card p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* ================================================================
+           CTA Section
+           ================================================================ */
+        .cta-section {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 400px;
+            background: radial-gradient(ellipse, rgba(59,130,246,0.12) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .cta-section p {
+            font-size: 1.1rem;
+            color: #94a3b8;
+            margin-bottom: 36px;
+            position: relative;
+        }
+
+        .cta-section .btn { position: relative; }
+
+        /* ================================================================
+           Footer
+           ================================================================ */
+        .footer {
+            background: #0f172a;
+            padding: 48px 0 32px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .footer-brand {
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: #64748b;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover { color: #cbd5e1; }
+
+        /* ================================================================
+           Animations
+           ================================================================ */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ================================================================
+           Responsive
+           ================================================================ */
+        @media (max-width: 900px) {
+            .hero-inner { grid-template-columns: 1fr; text-align: center; }
+            .hero-sub { margin: 0 auto 36px; }
+            .hero-actions { justify-content: center; }
+            .hero-image { display: none; }
+            .hero h1 { font-size: 2.5rem; }
+            .hero-stats { justify-content: center; }
+            .detail-grid, .detail-grid.reverse { grid-template-columns: 1fr; direction: ltr; }
+            .detail-visual { display: none; }
+            .nav-links { display: none; }
+            .mobile-toggle { display: block; }
+        }
+
+        @media (max-width: 600px) {
+            section { padding: 56px 0; }
+            .hero { padding: 120px 0 64px; }
+            .hero h1 { font-size: 2rem; }
+            .hero-stats { flex-direction: column; gap: 16px; }
+            .features-grid { grid-template-columns: 1fr; }
+            .section-header h2 { font-size: 1.75rem; }
+            .cta-section h2 { font-size: 1.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ================================================================
+     Navigation
+     ================================================================ -->
+<nav class="nav" id="nav">
+    <div class="container nav-inner">
+        <a href="#" class="nav-brand">
+            <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="28" height="28" rx="6" fill="#3b82f6"/>
+                <path d="M8 14h12M14 8v12M10 10l8 8M18 10l-8 8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            S.A.K. Utility
+        </a>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#details">Details</a></li>
+            <li><a href="#requirements">Requirements</a></li>
+            <li><a href="https://github.com/RandyNorthrup/S.A.K.-Utility" target="_blank">GitHub</a></li>
+        </ul>
+        <a href="https://github.com/RandyNorthrup/S.A.K.-Utility/releases/latest" class="nav-cta">
+            <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><path d="M8 12l-4-4h2.5V3h3v5H12L8 12z" fill="currentColor"/><path d="M3 13h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Download
+        </a>
+    </div>
+</nav>
+
+<!-- ================================================================
+     Hero
+     ================================================================ -->
+<section class="hero">
+    <div class="container hero-inner">
+        <div>
+            <div class="hero-badge">
+                <span class="dot"></span>
+                v0.9.0.8 — Latest Release
+            </div>
+            <h1>The <span class="gradient">Swiss Army Knife</span> for PC Technicians</h1>
+            <p class="hero-sub">
+                Migration &middot; Maintenance &middot; Recovery &middot; Imaging &middot; Deployment&thinsp;&mdash;&thinsp;one
+                portable EXE. No installer.&ensp;No runtime dependencies.&ensp;Just drop it on
+                a USB stick and go.
+            </p>
+            <div class="hero-actions">
+                <a href="https://github.com/RandyNorthrup/S.A.K.-Utility/releases/latest" class="btn btn-primary">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><path d="M10 15l-5-5h3.125V4h3.75v6H15l-5 5z" fill="currentColor"/><path d="M4 16.5h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    Download Latest Release
+                </a>
+                <a href="https://github.com/RandyNorthrup/S.A.K.-Utility" class="btn btn-outline" target="_blank">
+                    <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                    View on GitHub
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <h3>138</h3>
+                    <p>Source Files</p>
+                </div>
+                <div class="hero-stat">
+                    <h3>75</h3>
+                    <p>Automated Tests</p>
+                </div>
+                <div class="hero-stat">
+                    <h3>8</h3>
+                    <p>Major Panels</p>
+                </div>
+                <div class="hero-stat">
+                    <h3>0</h3>
+                    <p>Build Warnings</p>
+                </div>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="https://raw.githubusercontent.com/RandyNorthrup/S.A.K.-Utility/main/resources/sak_splash.png"
+                 alt="S.A.K. Utility splash screen"
+                 loading="eager">
+        </div>
+    </div>
+</section>
+
+<!-- ================================================================
+     Highlight Pills
+     ================================================================ -->
+<section class="highlights" id="features">
+    <div class="container" style="padding-top:48px;padding-bottom:48px;">
+        <div class="highlights-grid">
+            <div class="highlight-pill">
+                <div class="icon" style="background:rgba(59,130,246,0.1);color:#3b82f6;">&#x1F4BE;</div>
+                <h4>100% Portable</h4>
+            </div>
+            <div class="highlight-pill">
+                <div class="icon" style="background:rgba(22,163,74,0.1);color:#16a34a;">&#x1F504;</div>
+                <h4>Backup &amp; Restore</h4>
+            </div>
+            <div class="highlight-pill">
+                <div class="icon" style="background:rgba(217,119,6,0.1);color:#d97706;">&#x1F4CA;</div>
+                <h4>Diagnostics</h4>
+            </div>
+            <div class="highlight-pill">
+                <div class="icon" style="background:rgba(124,58,237,0.1);color:#7c3aed;">&#x1F4BF;</div>
+                <h4>Image Flasher</h4>
+            </div>
+            <div class="highlight-pill">
+                <div class="icon" style="background:rgba(5,150,105,0.1);color:#059669;">&#x1F4C1;</div>
+                <h4>File Management</h4>
+            </div>
+            <div class="highlight-pill">
+                <div class="icon" style="background:rgba(220,38,38,0.1);color:#dc2626;">&#x1F4E6;</div>
+                <h4>App Management</h4>
+            </div>
+            <div class="highlight-pill">
+                <div class="icon" style="background:rgba(59,130,246,0.1);color:#3b82f6;">&#x1F310;</div>
+                <h4>Network Tools</h4>
+            </div>
+            <div class="highlight-pill">
+                <div class="icon" style="background:rgba(124,58,237,0.1);color:#7c3aed;">&#x1F4E7;</div>
+                <h4>Email Inspector</h4>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================================================================
+     Feature Cards
+     ================================================================ -->
+<section style="background:var(--bg-page);">
+    <div class="container">
+        <div class="section-header fade-in">
+            <span class="section-label">Capabilities</span>
+            <h2>Everything a Tech Needs, In One EXE</h2>
+            <p>Eight major feature panels covering the full lifecycle of PC setup, maintenance, migration, and recovery.</p>
+        </div>
+        <div class="features-grid">
+
+            <div class="feature-card fade-in">
+                <div class="feature-icon" style="background:rgba(22,163,74,0.1);">&#x1F504;</div>
+                <h3>Backup &amp; Restore</h3>
+                <p>Step-by-step wizards with smart filtering, AES-256 encryption, NTFS permission handling, plus integrated screenshot settings and BitLocker key backup.</p>
+                <div class="tag-row">
+                    <span class="tag">AES-256</span>
+                    <span class="tag">NTFS</span>
+                    <span class="tag">BitLocker</span>
+                    <span class="tag">Wizards</span>
+                </div>
+            </div>
+
+            <div class="feature-card fade-in">
+                <div class="feature-icon" style="background:rgba(217,119,6,0.1);">&#x1F4CA;</div>
+                <h3>Diagnostics &amp; Benchmarking</h3>
+                <p>SMART disk health, CPU/disk/memory benchmarks, stress testing, thermal monitoring, system maintenance tools, and HTML/JSON/CSV reports.</p>
+                <div class="tag-row">
+                    <span class="tag">SMART</span>
+                    <span class="tag">Benchmarks</span>
+                    <span class="tag">Stress Test</span>
+                    <span class="tag">Reports</span>
+                </div>
+            </div>
+
+            <div class="feature-card fade-in">
+                <div class="feature-icon" style="background:rgba(124,58,237,0.1);">&#x1F4BF;</div>
+                <h3>Image Flasher</h3>
+                <p>Flash ISOs and IMGs to USB. Download Windows ISOs via UUP Dump or Linux ISOs directly. Full UEFI boot support and streaming decompression.</p>
+                <div class="tag-row">
+                    <span class="tag">ISO</span>
+                    <span class="tag">IMG</span>
+                    <span class="tag">UEFI</span>
+                    <span class="tag">Windows</span>
+                    <span class="tag">Linux</span>
+                </div>
+            </div>
+
+            <div class="feature-card fade-in">
+                <div class="feature-icon" style="background:rgba(5,150,105,0.1);">&#x1F4C1;</div>
+                <h3>File Management</h3>
+                <p>Organize files by extension, find duplicates with parallel hashing, and grep-style content search with regex, metadata, archive, and binary/hex modes.</p>
+                <div class="tag-row">
+                    <span class="tag">Regex</span>
+                    <span class="tag">Dedup</span>
+                    <span class="tag">EXIF</span>
+                    <span class="tag">Hex Search</span>
+                </div>
+            </div>
+
+            <div class="feature-card fade-in">
+                <div class="feature-icon" style="background:rgba(220,38,38,0.1);">&#x1F4E6;</div>
+                <h3>Application Management</h3>
+                <p>Scan installed apps, match to Chocolatey packages, bulk-install on new PCs. Offline deployment with direct installer downloads. Deep uninstall with leftover scanning.</p>
+                <div class="tag-row">
+                    <span class="tag">Chocolatey</span>
+                    <span class="tag">Offline Deploy</span>
+                    <span class="tag">Deep Uninstall</span>
+                    <span class="tag">Registry Diff</span>
+                </div>
+            </div>
+
+            <div class="feature-card fade-in">
+                <div class="feature-icon" style="background:rgba(59,130,246,0.1);">&#x1F310;</div>
+                <h3>Network Management</h3>
+                <p>10-tool diagnostic suite: ping, traceroute, MTR, DNS, port scan, bandwidth, WiFi analysis. Adapter inspector with backup/restore and WiFi QR code manager.</p>
+                <div class="tag-row">
+                    <span class="tag">Ping</span>
+                    <span class="tag">Traceroute</span>
+                    <span class="tag">Port Scan</span>
+                    <span class="tag">WiFi QR</span>
+                </div>
+            </div>
+
+            <div class="feature-card fade-in">
+                <div class="feature-icon" style="background:rgba(124,58,237,0.1);">&#x1F4E7;</div>
+                <h3>Email Inspector</h3>
+                <p>Browse PST, OST, and MBOX email archives without Outlook. Search, export (EML/CSV/VCF/ICS), contacts, calendar views, and attachments browser.</p>
+                <div class="tag-row">
+                    <span class="tag">PST</span>
+                    <span class="tag">OST</span>
+                    <span class="tag">MBOX</span>
+                    <span class="tag">No Outlook</span>
+                </div>
+            </div>
+
+            <div class="feature-card fade-in">
+                <div class="feature-icon" style="background:rgba(59,130,246,0.1);">&#x1F3A8;</div>
+                <h3>Modern Windows 11 UI</h3>
+                <p>Clean, rounded-corner design matching Windows 11 aesthetics. Custom splash screen, responsive layouts, and a professional dark/light theme.</p>
+                <div class="tag-row">
+                    <span class="tag">Win11 Style</span>
+                    <span class="tag">C++23</span>
+                    <span class="tag">Qt6</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ================================================================
+     Detailed Sections
+     ================================================================ -->
+<div id="details">
+
+    <!-- Backup & Restore -->
+    <section class="detail-section">
+        <div class="container">
+            <div class="detail-grid fade-in">
+                <div class="detail-content">
+                    <span class="section-label">Migration</span>
+                    <h3>Backup &amp; Restore That Just Works</h3>
+                    <p>Guided wizards walk you through every step of user-profile migration. Smart filtering picks the data that matters and leaves the rest behind.</p>
+                    <ul class="check-list">
+                        <li>AES-256 encryption for sensitive data</li>
+                        <li>NTFS permission preservation and restoration</li>
+                        <li>Screenshot Settings backup (Windows capture prefs)</li>
+                        <li>BitLocker recovery key export</li>
+                        <li>Selective folder inclusion with preview</li>
+                    </ul>
+                </div>
+                <div class="detail-visual">
+                    <div class="visual-bar accent" style="width:95%"></div>
+                    <div class="visual-bar" style="width:78%"></div>
+                    <div class="visual-bar accent" style="width:88%"></div>
+                    <div class="visual-bar" style="width:60%"></div>
+                    <div class="visual-bar accent" style="width:72%"></div>
+                    <div style="text-align:center;padding-top:16px;color:var(--text-muted);font-size:0.85rem;">Step-by-step wizard progress</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- App Management -->
+    <section class="detail-section">
+        <div class="container">
+            <div class="detail-grid reverse fade-in">
+                <div class="detail-content">
+                    <span class="section-label">Deployment</span>
+                    <h3>App Installation &amp; Offline Deploy</h3>
+                    <p>Scan a source PC, match every app to Chocolatey, then bulk-install the entire stack on a fresh machine &mdash; even without internet.</p>
+                    <ul class="check-list">
+                        <li>Registry scan with Chocolatey package matching</li>
+                        <li>Confidence-tiered matching (high, medium, low, manual)</li>
+                        <li>Build Bundle: self-contained offline nupkg packages</li>
+                        <li>Direct Download: grab raw EXE/MSI installers</li>
+                        <li>Preset lists: Office PC, Developer, Media, and more</li>
+                        <li>Deep uninstall with leftover scanning and registry diffs</li>
+                    </ul>
+                </div>
+                <div class="detail-visual">
+                    <div class="visual-bar" style="width:90%;background:linear-gradient(90deg,#16a34a,#059669);"></div>
+                    <div class="visual-bar" style="width:75%"></div>
+                    <div class="visual-bar" style="width:85%;background:linear-gradient(90deg,#16a34a,#059669);"></div>
+                    <div class="visual-bar" style="width:65%"></div>
+                    <div class="visual-bar" style="width:55%;background:linear-gradient(90deg,#16a34a,#059669);"></div>
+                    <div style="text-align:center;padding-top:16px;color:var(--text-muted);font-size:0.85rem;">Package installation progress</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Network -->
+    <section class="detail-section">
+        <div class="container">
+            <div class="detail-grid fade-in">
+                <div class="detail-content">
+                    <span class="section-label">Networking</span>
+                    <h3>Complete Network Diagnostic Suite</h3>
+                    <p>Ten diagnostic tools in one panel. Adapter configuration backup/restore. WiFi credential management with QR code generation.</p>
+                    <ul class="check-list">
+                        <li>Ping, Traceroute, MTR path analysis</li>
+                        <li>DNS lookup, Port scanner, Bandwidth tests</li>
+                        <li>WiFi analyzer and Active connections monitor</li>
+                        <li>Firewall auditor and Network share browser</li>
+                        <li>Adapter config backup/restore to JSON</li>
+                        <li>WiFi QR codes &mdash; single and batch generation</li>
+                    </ul>
+                </div>
+                <div class="detail-visual">
+                    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
+                        <div style="background:var(--bg-white);border:1px solid var(--border-default);border-radius:var(--radius-sm);padding:16px;text-align:center;">
+                            <div style="font-size:1.5rem;margin-bottom:4px;">&#x1F3D3;</div>
+                            <div style="font-size:0.75rem;font-weight:600;color:var(--text-muted);">Ping</div>
+                        </div>
+                        <div style="background:var(--bg-white);border:1px solid var(--border-default);border-radius:var(--radius-sm);padding:16px;text-align:center;">
+                            <div style="font-size:1.5rem;margin-bottom:4px;">&#x1F500;</div>
+                            <div style="font-size:0.75rem;font-weight:600;color:var(--text-muted);">Traceroute</div>
+                        </div>
+                        <div style="background:var(--bg-white);border:1px solid var(--border-default);border-radius:var(--radius-sm);padding:16px;text-align:center;">
+                            <div style="font-size:1.5rem;margin-bottom:4px;">&#x1F50D;</div>
+                            <div style="font-size:0.75rem;font-weight:600;color:var(--text-muted);">DNS Lookup</div>
+                        </div>
+                        <div style="background:var(--bg-white);border:1px solid var(--border-default);border-radius:var(--radius-sm);padding:16px;text-align:center;">
+                            <div style="font-size:1.5rem;margin-bottom:4px;">&#x1F6AA;</div>
+                            <div style="font-size:0.75rem;font-weight:600;color:var(--text-muted);">Port Scan</div>
+                        </div>
+                        <div style="background:var(--bg-white);border:1px solid var(--border-default);border-radius:var(--radius-sm);padding:16px;text-align:center;">
+                            <div style="font-size:1.5rem;margin-bottom:4px;">&#x1F4F6;</div>
+                            <div style="font-size:0.75rem;font-weight:600;color:var(--text-muted);">WiFi</div>
+                        </div>
+                        <div style="background:var(--bg-white);border:1px solid var(--border-default);border-radius:var(--radius-sm);padding:16px;text-align:center;">
+                            <div style="font-size:1.5rem;margin-bottom:4px;">&#x1F6E1;</div>
+                            <div style="font-size:0.75rem;font-weight:600;color:var(--text-muted);">Firewall</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Email -->
+    <section class="detail-section">
+        <div class="container">
+            <div class="detail-grid reverse fade-in">
+                <div class="detail-content">
+                    <span class="section-label">Email</span>
+                    <h3>Email Archive Inspector</h3>
+                    <p>Open PST, OST, and MBOX files without installing Outlook. Browse folders, search messages, view contacts and calendars, and export whatever you need.</p>
+                    <ul class="check-list">
+                        <li>PST, OST, and MBOX format support</li>
+                        <li>Automatic email file discovery</li>
+                        <li>Folder tree navigation with item counts</li>
+                        <li>Calendar views: Month, Week, and Day</li>
+                        <li>Contacts with VCF and CSV export</li>
+                        <li>Attachments browser with bulk export</li>
+                    </ul>
+                </div>
+                <div class="detail-visual">
+                    <div style="display:flex;gap:12px;align-items:stretch;">
+                        <div style="flex:0 0 35%;background:var(--bg-white);border:1px solid var(--border-default);border-radius:var(--radius-sm);padding:12px;">
+                            <div style="font-size:0.7rem;font-weight:700;color:var(--text-muted);margin-bottom:8px;">FOLDERS</div>
+                            <div style="font-size:0.78rem;color:var(--text-body);padding:4px 0;border-bottom:1px solid var(--border-default);">&#x1F4E5; Inbox (1,247)</div>
+                            <div style="font-size:0.78rem;color:var(--text-body);padding:4px 0;border-bottom:1px solid var(--border-default);">&#x1F4E4; Sent Items</div>
+                            <div style="font-size:0.78rem;color:var(--text-body);padding:4px 0;border-bottom:1px solid var(--border-default);">&#x1F4DD; Drafts</div>
+                            <div style="font-size:0.78rem;color:var(--text-body);padding:4px 0;">&#x1F5D1; Deleted</div>
+                        </div>
+                        <div style="flex:1;background:var(--bg-white);border:1px solid var(--border-default);border-radius:var(--radius-sm);padding:12px;">
+                            <div style="font-size:0.7rem;font-weight:700;color:var(--text-muted);margin-bottom:8px;">PREVIEW</div>
+                            <div class="visual-bar accent" style="height:8px;margin-bottom:8px;width:70%;"></div>
+                            <div class="visual-bar" style="height:6px;margin-bottom:6px;"></div>
+                            <div class="visual-bar" style="height:6px;margin-bottom:6px;width:90%;"></div>
+                            <div class="visual-bar" style="height:6px;width:60%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- ================================================================
+     System Requirements
+     ================================================================ -->
+<section class="requirements" id="requirements">
+    <div class="container">
+        <div class="section-header fade-in">
+            <span class="section-label">System Requirements</span>
+            <h2>Ready to Run, Anywhere</h2>
+            <p>S.A.K. Utility is a single portable EXE. No installer, no runtime dependencies on the target machine.</p>
+        </div>
+        <div class="req-grid fade-in">
+            <div class="req-card">
+                <div class="req-icon">&#x1F5A5;</div>
+                <h4>Operating System</h4>
+                <p>Windows 10 (1809+) or Windows 11</p>
+            </div>
+            <div class="req-card">
+                <div class="req-icon">&#x26A1;</div>
+                <h4>Architecture</h4>
+                <p>x64 Intel or AMD processor</p>
+            </div>
+            <div class="req-card">
+                <div class="req-icon">&#x1F4BE;</div>
+                <h4>Storage</h4>
+                <p>~50 MB for the portable EXE</p>
+            </div>
+            <div class="req-card">
+                <div class="req-icon">&#x1F50C;</div>
+                <h4>Dependencies</h4>
+                <p>None &mdash; fully self-contained</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================================================================
+     Tech Stack
+     ================================================================ -->
+<section style="background:var(--bg-page);">
+    <div class="container">
+        <div class="section-header fade-in">
+            <span class="section-label">Under the Hood</span>
+            <h2>Built With Discipline</h2>
+            <p>Modern C++23, strict compiler warnings, and a TigerStyle-inspired coding philosophy that prioritizes safety, performance, and clarity.</p>
+        </div>
+        <div class="req-grid fade-in">
+            <div class="req-card">
+                <h4>C++23</h4>
+                <p>MSVC 19.44+ with /std:c++latest</p>
+            </div>
+            <div class="req-card">
+                <h4>Qt 6.5.3</h4>
+                <p>Core, Widgets, Concurrent, Network</p>
+            </div>
+            <div class="req-card">
+                <h4>/W4 /WX</h4>
+                <p>Zero warnings, zero errors &mdash; always</p>
+            </div>
+            <div class="req-card">
+                <h4>75 Tests</h4>
+                <p>Unit + integration, CTest runner</p>
+            </div>
+            <div class="req-card">
+                <h4>Pre-Commit Hooks</h4>
+                <p>clang-format, Lizard, cppcheck</p>
+            </div>
+            <div class="req-card">
+                <h4>AGPL-3.0</h4>
+                <p>Open source, copyleft license</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================================================================
+     CTA
+     ================================================================ -->
+<section class="cta-section">
+    <div class="container">
+        <h2 class="fade-in">Ready to Simplify Your Toolkit?</h2>
+        <p class="fade-in">Download S.A.K. Utility and carry every tool you need on a single USB stick.</p>
+        <div class="fade-in">
+            <a href="https://github.com/RandyNorthrup/S.A.K.-Utility/releases/latest" class="btn btn-primary" style="font-size:1.05rem;padding:16px 36px;">
+                <svg width="22" height="22" fill="none" viewBox="0 0 20 20"><path d="M10 15l-5-5h3.125V4h3.75v6H15l-5 5z" fill="currentColor"/><path d="M4 16.5h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                Download Latest Release
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ================================================================
+     Footer
+     ================================================================ -->
+<footer class="footer">
+    <div class="container footer-inner">
+        <div class="footer-brand">
+            &copy; 2025&ndash;2026 Randy Northrup. Licensed under AGPL-3.0.
+        </div>
+        <ul class="footer-links">
+            <li><a href="https://github.com/RandyNorthrup/S.A.K.-Utility" target="_blank">GitHub</a></li>
+            <li><a href="https://github.com/RandyNorthrup/S.A.K.-Utility/releases" target="_blank">Releases</a></li>
+            <li><a href="https://github.com/RandyNorthrup/S.A.K.-Utility/blob/main/LICENSE" target="_blank">License</a></li>
+            <li><a href="https://github.com/RandyNorthrup/S.A.K.-Utility/blob/main/CONTRIBUTING.md" target="_blank">Contributing</a></li>
+        </ul>
+    </div>
+</footer>
+
+<!-- ================================================================
+     Scripts
+     ================================================================ -->
+<script>
+    // Sticky nav shadow
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+        nav.classList.toggle('scrolled', window.scrollY > 10);
+    });
+
+    // Scroll-triggered fade-in
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
