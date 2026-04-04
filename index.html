@@ -741,13 +741,13 @@
         <div>
             <div class="hero-badge">
                 <span class="dot"></span>
-                v0.9.0.8 — Latest Release
+                v0.9.1.1 — Latest Release
             </div>
             <h1>The <span class="gradient">Swiss Army Knife</span> for PC Technicians</h1>
             <p class="hero-sub">
                 Migration &middot; Maintenance &middot; Recovery &middot; Imaging &middot; Deployment&thinsp;&mdash;&thinsp;one
-                portable EXE. No installer.&ensp;No runtime dependencies.&ensp;Just drop it on
-                a USB stick and go.
+                portable EXE. No installer.&ensp;No runtime dependencies.&ensp;Code signed
+                via Azure Trusted Signing.&ensp;Just drop it on a USB stick and go.
             </p>
             <div class="hero-actions">
                 <a href="https://github.com/RandyNorthrup/S.A.K.-Utility/releases/latest" class="btn btn-primary">
@@ -761,15 +761,15 @@
             </div>
             <div class="hero-stats">
                 <div class="hero-stat">
-                    <h3>138</h3>
+                    <h3>157</h3>
                     <p>Source Files</p>
                 </div>
                 <div class="hero-stat">
-                    <h3>75</h3>
+                    <h3>93</h3>
                     <p>Automated Tests</p>
                 </div>
                 <div class="hero-stat">
-                    <h3>8</h3>
+                    <h3>7</h3>
                     <p>Major Panels</p>
                 </div>
                 <div class="hero-stat">
@@ -822,7 +822,7 @@
             </div>
             <div class="highlight-pill">
                 <div class="icon" style="background:rgba(124,58,237,0.1);color:#7c3aed;">&#x1F4E7;</div>
-                <h4>Email Inspector</h4>
+                <h4>Email Tools</h4>
             </div>
         </div>
     </div>
@@ -836,7 +836,7 @@
         <div class="section-header fade-in">
             <span class="section-label">Capabilities</span>
             <h2>Everything a Tech Needs, In One EXE</h2>
-            <p>Eight major feature panels covering the full lifecycle of PC setup, maintenance, migration, and recovery.</p>
+            <p>Seven major feature panels covering the full lifecycle of PC setup, maintenance, migration, and recovery.</p>
         </div>
         <div class="features-grid">
 
@@ -867,13 +867,14 @@
             <div class="feature-card fade-in">
                 <div class="feature-icon" style="background:rgba(124,58,237,0.1);">&#x1F4BF;</div>
                 <h3>Image Flasher</h3>
-                <p>Flash ISOs and IMGs to USB. Download Windows ISOs via UUP Dump or Linux ISOs directly. Full UEFI boot support and streaming decompression.</p>
+                <p>Flash disk images to USB — supports ISO, IMG, WIC, ZIP, GZ, BZ2, XZ, DMG, and DSK. Download Windows ISOs via UUP Dump API or Linux ISOs from a built-in distro catalog. Full UEFI boot support.</p>
                 <div class="tag-row">
                     <span class="tag">ISO</span>
                     <span class="tag">IMG</span>
                     <span class="tag">UEFI</span>
                     <span class="tag">Windows</span>
                     <span class="tag">Linux</span>
+                    <span class="tag">9 Formats</span>
                 </div>
             </div>
 
@@ -915,13 +916,15 @@
 
             <div class="feature-card fade-in">
                 <div class="feature-icon" style="background:rgba(124,58,237,0.1);">&#x1F4E7;</div>
-                <h3>Email Inspector</h3>
-                <p>Browse PST, OST, and MBOX email archives without Outlook. Search, export (EML/CSV/VCF/ICS), contacts, calendar views, and attachments browser.</p>
+                <h3>Email Tools</h3>
+                <p>Browse PST, OST, and MBOX email archives without Outlook. Search, export (EML/CSV/VCF/ICS), contacts, calendar views, and attachments browser. Includes multi-threaded OST/PST converter with 8 output formats and IMAP cloud upload.</p>
                 <div class="tag-row">
                     <span class="tag">PST</span>
                     <span class="tag">OST</span>
                     <span class="tag">MBOX</span>
                     <span class="tag">No Outlook</span>
+                    <span class="tag">OST Converter</span>
+                    <span class="tag">IMAP Upload</span>
                 </div>
             </div>
 
@@ -1057,8 +1060,8 @@
             <div class="detail-grid reverse fade-in">
                 <div class="detail-content">
                     <span class="section-label">Email</span>
-                    <h3>Email Archive Inspector</h3>
-                    <p>Open PST, OST, and MBOX files without installing Outlook. Browse folders, search messages, view contacts and calendars, and export whatever you need.</p>
+                    <h3>Email Tools</h3>
+                    <p>Open PST, OST, and MBOX files without installing Outlook. Browse folders, search messages, view contacts and calendars, and export whatever you need. Convert OST/PST archives to 8 output formats with multi-threaded processing.</p>
                     <ul class="check-list">
                         <li>PST, OST, and MBOX format support</li>
                         <li>Automatic email file discovery</li>
@@ -1066,6 +1069,8 @@
                         <li>Calendar views: Month, Week, and Day</li>
                         <li>Contacts with VCF and CSV export</li>
                         <li>Attachments browser with bulk export</li>
+                        <li>OST/PST converter: EML, MSG, MBOX, DBX, HTML, PDF, IMAP upload</li>
+                        <li>Deleted item recovery and PST splitting for large archives</li>
                     </ul>
                 </div>
                 <div class="detail-visual">
@@ -1113,14 +1118,24 @@
                 <p>x64 Intel or AMD processor</p>
             </div>
             <div class="req-card">
+                <div class="req-icon">&#x1F4BB;</div>
+                <h4>RAM</h4>
+                <p>4 GB minimum</p>
+            </div>
+            <div class="req-card">
                 <div class="req-icon">&#x1F4BE;</div>
                 <h4>Storage</h4>
-                <p>~50 MB for the portable EXE</p>
+                <p>~500 MB + working space</p>
             </div>
             <div class="req-card">
                 <div class="req-icon">&#x1F50C;</div>
                 <h4>Dependencies</h4>
                 <p>None &mdash; fully self-contained</p>
+            </div>
+            <div class="req-card">
+                <div class="req-icon">&#x1F6E1;</div>
+                <h4>Privileges</h4>
+                <p>Standard user; elevates per-task via UAC</p>
             </div>
         </div>
     </div>
@@ -1142,15 +1157,15 @@
                 <p>MSVC 19.44+ with /std:c++latest</p>
             </div>
             <div class="req-card">
-                <h4>Qt 6.5.3</h4>
-                <p>Core, Widgets, Concurrent, Network</p>
+                <h4>Qt 6.5+</h4>
+                <p>Core, Widgets, Concurrent, Network, Xml</p>
             </div>
             <div class="req-card">
                 <h4>/W4 /WX</h4>
                 <p>Zero warnings, zero errors &mdash; always</p>
             </div>
             <div class="req-card">
-                <h4>75 Tests</h4>
+                <h4>93 Tests</h4>
                 <p>Unit + integration, CTest runner</p>
             </div>
             <div class="req-card">
