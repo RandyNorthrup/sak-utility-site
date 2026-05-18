@@ -12,6 +12,7 @@
     --accent-red: #dc2626;
     --accent-teal: #0f766e;
     --accent-indigo: #4f46e5;
+    --accent-cyan: #0891b2;
 
     --text-primary: #0f172a;
     --text-heading: #1e293b;
@@ -383,13 +384,14 @@ header[id] {
 }
 
 .workspace-explorer {
-    --workspace-0: var(--success);
-    --workspace-1: var(--accent-purple);
-    --workspace-2: var(--accent-orange);
-    --workspace-3: var(--accent-teal);
-    --workspace-4: var(--accent-red);
-    --workspace-5: var(--primary);
+    --workspace-0: var(--primary);
+    --workspace-1: var(--success);
+    --workspace-2: var(--accent-purple);
+    --workspace-3: var(--accent-orange);
+    --workspace-4: var(--accent-teal);
+    --workspace-5: var(--accent-red);
     --workspace-6: var(--accent-indigo);
+    --workspace-7: var(--accent-cyan);
     --workspace-accent: var(--workspace-0);
     overflow: hidden;
     background: rgba(255,255,255,0.94);

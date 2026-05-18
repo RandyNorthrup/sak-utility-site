@@ -37,7 +37,7 @@
                  aria-hidden="true">
             S.A.K. Utility
         </a>
-        <a href="https://github.com/RandyNorthrup/S.A.K.-Utility/releases/latest" class="nav-cta">
+        <a href="#download" class="nav-cta" data-download-latest>
             <svg width="16" height="16" fill="none" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 12l-4-4h2.5V3h3v5H12L8 12z" fill="currentColor"/><path d="M3 13h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
             <span>Download</span>
         </a>
@@ -52,7 +52,7 @@
         <div>
             <div class="hero-badge">
                 <span class="dot"></span>
-                v0.9.1.3 - Latest Release
+                <span id="latestReleaseBadge">Latest Release</span>
             </div>
             <h1>The <span class="gradient">Swiss Army Knife</span> for PC Technicians</h1>
             <p class="hero-sub">
@@ -61,7 +61,7 @@
                 Trusted.&ensp;Just drop it on a USB stick and go.
             </p>
             <div class="hero-actions">
-                <a href="https://github.com/RandyNorthrup/S.A.K.-Utility/releases/latest" class="btn btn-primary">
+                <a href="#download" class="btn btn-primary" data-download-latest>
                     <svg width="20" height="20" fill="none" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 15l-5-5h3.125V4h3.75v6H15l-5 5z" fill="currentColor"/><path d="M4 16.5h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                     Download Latest Release
                 </a>
@@ -94,26 +94,32 @@
             <div class="workspace-tabs" id="workspaceTabs" role="tablist" aria-label="Screenshot categories"></div>
             <div class="workspace-view">
                 <div class="workspace-copy">
-                    <span class="workspace-eyebrow" id="workspaceEyebrow">Product workspace</span>
-                    <h3 id="workspaceTitle">Screenshot tour</h3>
-                    <p id="workspaceDescription">Browse S.A.K. Utility workspaces by technician task.</p>
+                    <span class="workspace-eyebrow" id="workspaceEyebrow">Technician assistant</span>
+                    <h3 id="workspaceTitle">Run technician jobs with S.A.K. AI</h3>
+                    <p id="workspaceDescription">Use the OpenAI-powered assistant to perform technician workflows, attach instructions and skills, execute approved local actions, and generate artifacts or reports under explicit access controls.</p>
                     <ul class="workspace-details" id="workspaceDetails">
-                        <li>Optimized screenshots load from the WebP gallery.</li>
+                        <li>Chat workspace built for PC technician workflows</li>
+                        <li>Configurable model, persona, workflow, and reasoning effort</li>
+                        <li>Artifacts, reports, and command approval states for controlled local execution</li>
                     </ul>
                     <div class="workspace-tags" id="workspaceTags">
-                        <span>Screenshots</span>
+                        <span>OpenAI</span>
+                        <span>Workflows</span>
+                        <span>Skills</span>
+                        <span>Artifacts</span>
+                        <span>Approval</span>
                     </div>
                 </div>
                 <figure class="workspace-media">
-                    <a id="workspaceImageLink" href="screenshots/webp/backup_restore_panel_main.webp" target="_blank" rel="noopener">
+                    <a id="workspaceImageLink" href="screenshots/webp/ai_assistant_panel_main.webp" target="_blank" rel="noopener">
                         <img id="workspaceImage"
-                             src="screenshots/webp/backup_restore_panel_main.webp"
-                             alt="Backup and Restore workspace showing backup and restore profile cards"
-                             width="1203"
-                             height="833"
+                             src="screenshots/webp/ai_assistant_panel_main.webp"
+                             alt="AI Assistant workspace showing technician chat and session controls"
+                             width="1201"
+                             height="831"
                              loading="lazy">
                     </a>
-                    <figcaption id="workspaceCaption">Main panel</figcaption>
+                    <figcaption id="workspaceCaption">Assistant panel</figcaption>
                 </figure>
                 <div class="workspace-shots" id="workspaceShots" role="group" aria-label="Screenshots in selected category"></div>
             </div>
@@ -132,7 +138,7 @@
         <h2 class="fade-in">Ready to simplify your toolkit?</h2>
         <p class="fade-in">Download S.A.K. Utility and carry the repair bench on a single USB stick.</p>
         <div class="fade-in">
-            <a href="https://github.com/RandyNorthrup/S.A.K.-Utility/releases/latest" class="btn btn-primary cta-btn">
+            <a href="#download" class="btn btn-primary cta-btn" data-download-latest>
                 <svg width="22" height="22" fill="none" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 15l-5-5h3.125V4h3.75v6H15l-5 5z" fill="currentColor"/><path d="M4 16.5h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                 Download Latest Release
             </a>
@@ -166,8 +172,62 @@
         nav.classList.toggle('scrolled', window.scrollY > 10);
     });
 
+    const latestReleaseApi = 'https://api.github.com/repos/RandyNorthrup/S.A.K.-Utility/releases/latest';
+    const latestDownloadLinks = document.querySelectorAll('[data-download-latest]');
+    const latestReleaseBadge = document.getElementById('latestReleaseBadge');
+    const latestReleasePromise = fetch(latestReleaseApi, {
+        headers: { Accept: 'application/vnd.github+json' }
+    })
+        .then((response) => response.json());
+
+    const latestDownloadUrlPromise = latestReleasePromise.then((release) => {
+        const assets = Array.isArray(release.assets) ? release.assets : [];
+        const asset = assets.find((item) => /^SAK-Utility-.*Windows-x64\.zip$/i.test(item.name))
+            || assets.find((item) => /Windows-x64\.zip$/i.test(item.name))
+            || assets.find((item) => /\.zip$/i.test(item.name));
+
+        return asset.browser_download_url;
+    });
+
+    function updateLatestDownloadLinks(downloadUrl) {
+        latestDownloadLinks.forEach((link) => {
+            link.href = downloadUrl;
+        });
+    }
+
+    latestDownloadUrlPromise.then(updateLatestDownloadLinks);
+
+    latestReleasePromise.then((release) => {
+        latestReleaseBadge.textContent = `${release.tag_name} - Latest Release`;
+    });
+
+    latestDownloadLinks.forEach((link) => {
+        link.addEventListener('click', (event) => {
+            event.preventDefault();
+            latestDownloadUrlPromise.then((downloadUrl) => {
+                window.location.href = downloadUrl;
+            });
+        });
+    });
+
     const screenshotPath = 'screenshots/webp/';
     const screenshotWorkspaces = [
+        {
+            label: 'AI',
+            eyebrow: 'Technician assistant',
+            title: 'Run technician jobs with S.A.K. AI',
+            description: 'Use the OpenAI-powered assistant to perform technician workflows, attach instructions and skills, execute approved local actions, and generate artifacts or reports under explicit access controls.',
+            details: [
+                'Chat workspace built for PC technician workflows',
+                'Configurable model, persona, workflow, and reasoning effort',
+                'Artifacts, reports, and command approval states for controlled local execution'
+            ],
+            tags: ['OpenAI', 'Workflows', 'Skills', 'Artifacts', 'Approval'],
+            shots: [
+                ['Assistant panel', 'ai_assistant_panel_main.webp', 'AI Assistant workspace showing technician chat and session controls', 1201, 831],
+                ['Workflow context', 'ai_assistant_workflow_context.webp', 'AI Assistant workspace showing workflow instructions and skill attachments', 1200, 903]
+            ]
+        },
         {
             label: 'Backup',
             eyebrow: 'Migration and recovery',
