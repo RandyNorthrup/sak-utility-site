@@ -1,6 +1,14 @@
 /* ================================================================
    CSS Custom Properties - matches the app's Windows 11 theme
    ================================================================ */
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400 800;
+    font-display: swap;
+    src: url("../fonts/inter-latin.woff2") format("woff2");
+}
+
 :root {
     --primary: #3b82f6;
     --primary-dark: #2563eb;
@@ -67,7 +75,7 @@ body::before {
     z-index: -1;
     background:
         linear-gradient(180deg, rgba(15,23,42,0.12), rgba(15,23,42,0.28)),
-        url("screenshots/webp/email_tools_panel_main.webp") center top / cover no-repeat;
+        url("../../screenshots/webp/email_tools_panel_main.webp") center top / cover no-repeat;
     transform: translateZ(0);
 }
 
@@ -363,7 +371,7 @@ header[id] {
 
 .section-header p {
     font-size: 1.05rem;
-    color: var(--text-muted);
+    color: var(--text-body);
     max-width: 680px;
     margin: 0 auto;
     overflow-wrap: anywhere;

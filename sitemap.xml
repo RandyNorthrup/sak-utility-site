@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+    <url>
+        <loc>https://sakutility.com/</loc>
+        <lastmod>2026-05-18</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+        <image:image>
+            <image:loc>https://sakutility.com/assets/social/og-image.jpg</image:loc>
+            <image:title>S.A.K. Utility portable Windows repair toolkit</image:title>
+            <image:caption>S.A.K. Utility AI Assistant workspace for PC technician workflows.</image:caption>
+        </image:image>
+        <image:image>
+            <image:loc>https://sakutility.com/screenshots/webp/backup_restore_panel_main.webp</image:loc>
+            <image:title>S.A.K. Utility backup and restore workspace</image:title>
+        </image:image>
+        <image:image>
+            <image:loc>https://sakutility.com/screenshots/webp/diag_benchmark_panel_diag.webp</image:loc>
+            <image:title>S.A.K. Utility diagnostics workspace</image:title>
+        </image:image>
+    </url>
+</urlset>
